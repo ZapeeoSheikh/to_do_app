@@ -120,7 +120,7 @@ class _NavBarPageState extends State<NavBarPage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home_rounded,
+              Icons.home_filled,
               size: 24.0,
             ),
             label: 'Home',
@@ -136,7 +136,7 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.library_books_rounded,
+              Icons.list_alt_outlined,
               size: 24.0,
             ),
             label: 'Schedule',
@@ -144,7 +144,7 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.person_outline,
               size: 30.0,
             ),
             label: 'Profile',
