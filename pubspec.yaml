@@ -65,6 +65,10 @@ dependencies:
   url_launcher_android: 6.0.27
   url_launcher_ios: 6.1.4
   url_launcher_platform_interface: 2.1.2
+  bot_toast:
+  firebase_auth:
+  dropdown_button2: ^2.3.9
+
 
 
   # The following adds the Cupertino Icons font to your application.

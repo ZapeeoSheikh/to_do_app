@@ -1,14 +1,16 @@
-import 'package:flutter/gestures.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:to_do_a_p_p/view/home/home_page.dart';
+import 'package:to_do_a_p_p/view/profile/profile_page.dart';
+import 'package:to_do_a_p_p/view/routine/routine_page.dart';
+import 'package:to_do_a_p_p/view/schedule/schedule_page.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
-import 'flutter_flow/flutter_flow_util.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'flutter_flow/nav/nav.dart';
-import 'index.dart';
+import 'helper/nav/nav.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +53,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      builder: BotToastInit(),
       debugShowCheckedModeBanner: false,
       title: 'ToDoAPP',
       localizationsDelegates: [
@@ -96,10 +99,10 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   Widget build(BuildContext context) {
     final tabs = {
-      'userProfile1': UserProfile1Widget(),
-      'Routine2': Routine2Widget(),
-      'MySchedule3': MySchedule3Widget(),
-      'ProfilePage4': ProfilePage4Widget(),
+      'home': const HomePage(),
+      'routine': const RoutinePage(),
+      'schedule': const SchedulePage(),
+      'profile': const ProfilePage(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
 
