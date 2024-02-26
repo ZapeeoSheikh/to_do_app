@@ -2,6 +2,10 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:to_do_a_p_p/model/routine_model.dart';
+import 'package:to_do_a_p_p/model/sechdule_model.dart';
+import 'package:to_do_a_p_p/model/to_do_model.dart';
+import 'package:to_do_a_p_p/model/view_model/to_do_view_model.dart';
 import 'package:to_do_a_p_p/utils/constant/colors.dart';
 import '/utils/constant/global_constant.dart' as globals;
 import '../../model/firebase_user.dart';
@@ -381,12 +385,16 @@ class _SignupPageState extends State<SignupPage> {
       addUserData(FirebaseUser(
           email: _model.textController1.text,
           phone: _model.textController2.text,
-          ));
+          name: null,
+          todo: TodoViewModel(
+              [],
+              [],
+              [])));
     } on FirebaseAuthException catch (e) {
       setState(() {
         isSubmited = false;
       });
-print(e);
+      print(e);
 // print(e.message);
       if (e.code == 'weak-password') {
         showToastMessage('The password provided is too weak');

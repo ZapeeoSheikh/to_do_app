@@ -316,13 +316,14 @@ class _ProfilePageState extends State<ProfilePage> {
   getUserData(String email) async {
     await users.where('email', isEqualTo: email).get().then((value) {
       setState(() {
+        // print(value.docs[0].id);
         globals.email = value.docs[0]['email'];
-        globals.name = value.docs[0]['name'];
-        textController1.text = value.docs[0]['name'];
-        textController2.text = value.docs[0]['email'];
-        textController3.text = value.docs[0]['phone'];
+        textController1.text = value.docs[0]['name'] ?? "";
+        textController2.text = value.docs[0]['email'] ?? "";
+        textController3.text = value.docs[0]['phone'] ?? "";
         docId = value.docs[0].id;
-        print(docId);
+        print(globals.name == "");
+        // globals.name = value.docs[0]['name'];
       });
     }).catchError((error) {
       setState(() {

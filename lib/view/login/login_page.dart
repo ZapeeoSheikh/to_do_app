@@ -351,10 +351,13 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       setState(() {
         isSubmited = false;
+        print(e.code);
         if (e.code == 'user-not-found') {
           showToastMessage('No user found for that email');
         } else if (e.code == 'wrong-password') {
           showToastMessage('Wrong password provided for that user');
+        } else if (e.code == 'INVALID_LOGIN_CREDENTIALS'){
+          showToastMessage('Invalid Credentials');
         }
       });
     } catch (e) {

@@ -5,7 +5,7 @@ class RoutineModel {
   String? day;
   String? detail;
 
-  RoutineModel({this.rname, this.category, this.time, this.day, this.detail});
+  RoutineModel(this.rname, this.category, this.time, this.day, this.detail);
 
   RoutineModel.fromJson(Map<String, dynamic> json) {
     rname = json['rname'];

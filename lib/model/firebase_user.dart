@@ -13,7 +13,7 @@ class FirebaseUser {
     email = json['email'];
     name = json['name'];
     phone = json['phone'];
-    // todo =  TodoViewModel.fromJson(json['todo']);
+    todo =  TodoViewModel.fromJson(json['todo']);
   }
 
   Map<String, dynamic> toJson() {

@@ -4,7 +4,7 @@ class TodoModel {
   String? detail;
   bool? isCompleted;
 
-  TodoModel({this.tname, this.category, this.detail, this.isCompleted});
+  TodoModel(this.tname, this.category, this.detail, this.isCompleted);
 
   TodoModel.fromJson(Map<String, dynamic> json) {
     tname = json['tname'];

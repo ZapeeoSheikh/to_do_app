@@ -9,7 +9,7 @@ class TodoViewModel {
   List<TodoModel>? todolist;
   List<SechduleModel>? sechdule;
 
-  TodoViewModel({this.routine, this.todolist, this.sechdule});
+  TodoViewModel(this.routine, this.todolist, this.sechdule);
 
   TodoViewModel.fromJson(Map<String, dynamic> json) {
     if (json['routine'] != null) {
@@ -24,9 +24,9 @@ class TodoViewModel {
         todolist!.add(TodoModel.fromJson(v));
       });
     }
-    if (json['sechdule'] != null) {
+    if (json['schedule'] != null) {
       sechdule = <SechduleModel>[];
-      json['sechdule'].forEach((v) {
+      json['schedule'].forEach((v) {
         sechdule!.add(SechduleModel.fromJson(v));
       });
     }
