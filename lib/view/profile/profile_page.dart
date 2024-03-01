@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:to_do_a_p_p/utils/constant/colors.dart';
+import '../../model/firebase_user.dart';
 import '/utils/constant/global_constant.dart' as globals;
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -21,8 +22,9 @@ class _ProfilePageState extends State<ProfilePage> {
   final textController1 = TextEditingController();
   final textController2 = TextEditingController();
   final textController3 = TextEditingController();
+  FirebaseUser firebaseUser = FirebaseUser();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  String docId = "";
+  // String docId = "";
 
   @override
   void initState() {
@@ -314,32 +316,37 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   getUserData(String email) async {
-    await users.where('email', isEqualTo: email).get().then((value) {
-      setState(() {
-        // print(value.docs[0].id);
-        globals.email = value.docs[0]['email'];
-        textController1.text = value.docs[0]['name'] ?? "";
-        textController2.text = value.docs[0]['email'] ?? "";
-        textController3.text = value.docs[0]['phone'] ?? "";
-        docId = value.docs[0].id;
-        print(globals.name == "");
-        // globals.name = value.docs[0]['name'];
-      });
-    }).catchError((error) {
-      setState(() {
-        print(error);
-        print("Failed");
-      });
-    });
+    final snapshot = await users.where('email', isEqualTo: email).get();
+    for (final doc in snapshot.docs) {
+      final userData = doc.data()
+      as Map<String, dynamic>?; // Use a type cast with null check
+      print(userData);
+      if (userData != null) {
+        setState(() {
+          print(userData['email']);
+          firebaseUser = FirebaseUser.fromJson(userData);
+          globals.email = firebaseUser.email!;
+          globals.name = firebaseUser.name ?? "";
+          globals.docID = doc.id;
+          textController1.text = firebaseUser.name ?? "";
+          textController2.text = firebaseUser.email ?? "";
+          textController3.text = firebaseUser.phone ?? "";
 
-    // print(user.email);
-    // print(user.accountLevel);
-    // print(user.dateOfBirth);
+          print(globals.name == "");
+          print(firebaseUser.todo);
+          print(globals.docID);
+        });
+      } else {
+        print("error");
+        // Handle cases where data is missing or invalid
+      }
+    }
   }
+
 
   updateUserData(String email) async {
     await users
-        .doc(docId)
+        .doc(globals.docID)
         .update({
           'name': textController1.text,
           'email': textController2.text,

@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do_a_p_p/view/todo/create_todo/create_todo_page.dart';
 import '../../view/forget/forget_page.dart';
 import '../../view/home/home_page.dart';
 import '../../view/login/login_page.dart';
 import '../../view/profile/profile_page.dart';
+import '../../view/routine/create_routine/create_routine_page.dart';
 import '../../view/routine/routine_page.dart';
 import '../../view/schedule/create_schedule/create_schedule_page.dart';
 import '../../view/schedule/schedule_page.dart';
@@ -95,21 +97,21 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               ? NavBarPage(initialPage: 'schedule')
               : SchedulePage(),
         ),
-        // FFRoute(
-        //   name: 'editProfilePage',
-        //   path: '/editProfilePage',
-        //   builder: (context, params) => EditProfilePageWidget(),
-        // ),
+        FFRoute(
+          name: 'createTodo',
+          path: '/createTodo',
+          builder: (context, params) => CreateTodoPage(),
+        ),
         FFRoute(
           name: 'createSchedule',
           path: '/createSchedule',
           builder: (context, params) => CreateSchedulePage(),
         ),
-        // FFRoute(
-        //   name: 'editRoutinePage',
-        //   path: '/editRoutinePage',
-        //   builder: (context, params) => EditRoutinePageWidget(),
-        // )
+        FFRoute(
+          name: 'createRoutine',
+          path: '/createRoutine',
+          builder: (context, params) => CreateRoutinePage(),
+        )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
 

@@ -12,4 +12,4 @@ export '/view/schedule/schedule_page.dart' show SchedulePage;
 export '/view/schedule/create_schedule/create_schedule_page.dart'
     show CreateSchedulePage;
 // export '/view/routine/edit_routine/edit_routine_page.dart'
-//     show EditRoutinePageWidget;
+//     show CreateRoutinePage;
