@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:to_do_a_p_p/model/firebase_user.dart';
 import 'package:to_do_a_p_p/model/sechdule_model.dart';
+import 'package:to_do_a_p_p/model/to_do_model.dart';
 import 'package:to_do_a_p_p/utils/constant/colors.dart';
+import '../../model/routine_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/utils/constant/global_constant.dart' as globals;
 import '/flutter_flow/flutter_flow_util.dart';
@@ -21,6 +23,10 @@ class _HomePageState extends State<HomePage> {
   FirebaseUser firebaseUser = FirebaseUser();
   bool isLoading = true;
   bool isReload = false;
+  List<TodoModel> todoList = [];
+  List<RoutineModel> routineModel = [];
+  List<SechduleModel> scheduleModel = [];
+
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -38,7 +44,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: scaffoldBackground,
@@ -123,9 +128,7 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               children: [
                                 Text(
-                                  'You have ${firebaseUser.todo != null &&
-                                      firebaseUser.todo!.todolist!.isNotEmpty ?
-                                  firebaseUser.todo!.todolist!.length : 0  } todo task today.',
+                                  'You have ${firebaseUser.todo != null && firebaseUser.todo!.todolist!.isNotEmpty ? firebaseUser.todo!.todolist!.length : 0} todo task today.',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -151,9 +154,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Center(
                               child: Text(
-                            "${firebaseUser.todo != null &&
-                                firebaseUser.todo!.todolist!.isNotEmpty ?
-                            firebaseUser.todo!.todolist!.length : 0  }",
+                            "${firebaseUser.todo != null && firebaseUser.todo!.todolist!.isNotEmpty ? firebaseUser.todo!.todolist!.length : 0}",
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -186,9 +187,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        isReload = await context.pushNamed('createTodo') as bool;
+                        isReload =
+                            await context.pushNamed('createTodo') as bool;
                         setState(() {
-                          if(isReload){
+                          if (isReload) {
                             getUserData(globals.email);
                           }
                         });
@@ -235,126 +237,131 @@ class _HomePageState extends State<HomePage> {
                         ],
                       )
                     : firebaseUser.todo != null &&
-                    firebaseUser.todo!.todolist!.isNotEmpty
+                            firebaseUser.todo!.todolist!.isNotEmpty
                         ? Column(
                             children: [
-                              for(var i in firebaseUser.todo!.todolist!)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF2F3F5),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                10.0, 0.0, 0.0, 0.0),
-                                        child: Container(
-                                          width: 55.0,
-                                          height: 55.0,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            i.category == 'Home' ?
-                                            Icons.home_filled :
-                                            i.category == 'Work' ?
-                                            Icons.laptop :
-                                            i.category == 'Study' ?
-                                            Icons.menu_book_outlined :
-                                            i.category == 'Personal' ?
-                                            Icons.person_outline :
-                                            Icons.person_outline,
-                                            color: Color(0xFF59BB18),
-                                            size: 30.0,
+                              for (var i in firebaseUser.todo!.todolist!)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFF2F3F5),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  10.0, 0.0, 0.0, 0.0),
+                                          child: Container(
+                                            width: 55.0,
+                                            height: 55.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              i.category == 'Home'
+                                                  ? Icons.home_filled
+                                                  : i.category == 'Work'
+                                                      ? Icons.laptop
+                                                      : i.category == 'Study'
+                                                          ? Icons
+                                                              .menu_book_outlined
+                                                          : i.category ==
+                                                                  'Personal'
+                                                              ? Icons
+                                                                  .person_outline
+                                                              : Icons
+                                                                  .person_outline,
+                                              color: Color(0xFF59BB18),
+                                              size: 30.0,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 5.0, 0.0, 0.0),
-                                                child: Text(
-                                                  i.category.toString(),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 5.0, 0.0, 0.0),
+                                                  child: Text(
+                                                    i.category.toString(),
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              'Source Sans Pro',
+                                                          fontSize: 18.0,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  i.tname.toString(),
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
                                                       .override(
                                                         fontFamily:
                                                             'Source Sans Pro',
-                                                        fontSize: 18.0,
+                                                        color: mainColor2,
                                                         fontWeight:
-                                                            FontWeight.w700,
+                                                            FontWeight.w600,
                                                       ),
                                                 ),
-                                              ),
-                                              Text(
-                                                i.tname.toString(),
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily:
-                                                          'Source Sans Pro',
-                                                      color: mainColor2,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                              ),
-                                              Text(
-                                                i.detail.toString(),
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                        fontFamily:
-                                                            'Source Sans Pro',
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color:
-                                                            black.withOpacity(
-                                                                0.5)),
-                                              ),
-                                            ],
+                                                Text(
+                                                  i.detail.toString(),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                          fontFamily:
+                                                              'Source Sans Pro',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              black.withOpacity(
+                                                                  0.5)),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            padding: EdgeInsets.zero,
-                                            elevation: 0,
-                                            backgroundColor:
-                                                Colors.transparent,
-                                            shape: CircleBorder()),
-                                        onPressed: () {
-                                          print("more");
-                                        },
-                                        child: Icon(
-                                          Icons.more_vert_sharp,
-                                          color: mainColor2,
-                                          size: 28.0,
-                                        ),
-                                      )
-                                    ],
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              elevation: 0,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              shape: CircleBorder()),
+                                          onPressed: () {
+                                            _showPopupMenu(i);
+                                            print("more");
+                                          },
+                                          child: Icon(
+                                            Icons.more_vert_sharp,
+                                            color: mainColor2,
+                                            size: 28.0,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
                             ],
                           )
                         : Column(
@@ -363,13 +370,14 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Image(
                                   width: double.infinity,
-                                  image: AssetImage(
-                                      "assets/images/addTodo.png")),
+                                  image:
+                                      AssetImage("assets/images/addTodo.png")),
                               TextButton(
                                 onPressed: () async {
-                                  isReload = await context.pushNamed('createTodo') as bool;
+                                  isReload = await context
+                                      .pushNamed('createTodo') as bool;
                                   setState(() {
-                                    if(isReload){
+                                    if (isReload) {
                                       getUserData(globals.email);
                                     }
                                   });
@@ -426,6 +434,9 @@ class _HomePageState extends State<HomePage> {
           print(firebaseUser.todo);
           print(globals.docID);
           isLoading = false;
+          todoList = firebaseUser.todo!.todolist ?? [];
+          routineModel = firebaseUser.todo!.routine ?? [];
+          scheduleModel = firebaseUser.todo!.sechdule ?? [];
         });
       } else {
         print("error");
@@ -434,4 +445,68 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  deleteUserData(TodoModel todoModel) async {
+    todoList.remove(todoModel);
+    await users.doc(globals.docID).update({
+      'todo': {
+        'todolist': todoList.map((todo) => todo.toJson()).toList(),
+        'routine': routineModel.map((routine) => routine.toJson()).toList(),
+        'schedule': scheduleModel.map((schedule) => schedule.toJson()).toList(),
+      }
+    }) // <-- Updated data
+        .then((_) {
+      print(users);
+      context.pop();
+      getUserData(globals.email);
+    }).catchError((error) {
+      print(error);
+    });
+  }
+
+  void _showPopupMenu(TodoModel todoModel) async {
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(Rect.zero, Rect.largest),
+      items: [
+        PopupMenuItem<String>(
+          child: ListTile(
+            onTap: (){
+              deleteUserData(todoModel);
+              print("del");
+            },
+            title: Text(
+              'Delete',
+              style: TextStyle(color: mainColor2),
+            ),
+            leading: Icon(Icons.delete),
+          ),
+        ),
+        PopupMenuItem<String>(
+          child: ListTile(
+            onTap: (){
+              print("view");
+            },
+            title: Text(
+              'View',
+              style: TextStyle(color: mainColor2),
+            ),
+            leading: Icon(Icons.remove_red_eye),
+          ),
+        ),
+        PopupMenuItem<String>(
+          child: ListTile(
+            onTap: (){
+              print("update");
+            },
+            title: Text(
+              'Update',
+              style: TextStyle(color: mainColor2),
+            ),
+            leading: Icon(Icons.update),
+          ),
+        ),
+      ],
+      elevation: 8.0,
+    );
+  }
 }
