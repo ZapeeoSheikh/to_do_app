@@ -18,7 +18,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  List<SechduleModel> sechduleModel = [];
   FirebaseUser firebaseUser = FirebaseUser();
   bool isLoading = true;
   bool isReload = false;
@@ -108,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               children: [
                                 Text(
-                                  'Today Schedule',
+                                  'Today Todo Tasks',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -124,7 +123,9 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               children: [
                                 Text(
-                                  'You have 6 schedule today.',
+                                  'You have ${firebaseUser.todo != null &&
+                                      firebaseUser.todo!.todolist!.isNotEmpty ?
+                                  firebaseUser.todo!.todolist!.length : 0  } todo task today.',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -150,9 +151,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Center(
                               child: Text(
-                            "${firebaseUser.todo != null ?
+                            "${firebaseUser.todo != null &&
                                 firebaseUser.todo!.todolist!.isNotEmpty ?
-                            firebaseUser.todo!.todolist!.length : 0 : 0 }",
+                            firebaseUser.todo!.todolist!.length : 0  }",
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -233,7 +234,8 @@ class _HomePageState extends State<HomePage> {
                                   ))),
                         ],
                       )
-                    : firebaseUser.todo!.todolist!.isNotEmpty
+                    : firebaseUser.todo != null &&
+                    firebaseUser.todo!.todolist!.isNotEmpty
                         ? Column(
                             children: [
                               for(var i in firebaseUser.todo!.todolist!)
@@ -241,7 +243,6 @@ class _HomePageState extends State<HomePage> {
                                 padding: const EdgeInsets.only(bottom: 10.0),
                                 child: Container(
                                   width: double.infinity,
-                                  height: 100.0,
                                   decoration: BoxDecoration(
                                     color: Color(0xFFF2F3F5),
                                     borderRadius: BorderRadius.circular(8.0),
@@ -433,7 +434,4 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void showToastMessage(String message) {
-    BotToast.showText(text: message); //popup a text toast;
-  }
 }

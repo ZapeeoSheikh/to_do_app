@@ -2,7 +2,7 @@ class RoutineModel {
   String? rname;
   String? category;
   String? time;
-  String? day;
+  List<int>? day;
   String? detail;
 
   RoutineModel(this.rname, this.category, this.time, this.day, this.detail);
@@ -11,7 +11,7 @@ class RoutineModel {
     rname = json['rname'];
     category = json['category'];
     time = json['time'];
-    day = json['day'];
+    day = json['day'].cast<int>();
     detail = json['detail'];
   }
 

@@ -20,27 +20,54 @@ class RoutinePage extends StatefulWidget {
 
 class _RoutinePageState extends State<RoutinePage> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  List<RoutineModel> routineModel = [];
   FirebaseUser firebaseUser = FirebaseUser();
   bool isLoading = true;
   bool isReload = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  int day = 0;
 
   @override
   void initState() {
     super.initState();
     getUserData(globals.email);
+    if(DateFormat('EEE').format(DateTime.now()) == 'Mon'){
+      setState(() {
+        day = 0;
+      });
+    } else if(DateFormat('EEE').format(DateTime.now()) == 'Tue'){
+      setState(() {
+        day = 1;
+      });
+    } else if(DateFormat('EEE').format(DateTime.now()) == 'Wed'){
+      setState(() {
+        day = 2;
+      });
+    } else if(DateFormat('EEE').format(DateTime.now()) == 'Thu'){
+      setState(() {
+        day = 3;
+      });
+    } else if(DateFormat('EEE').format(DateTime.now()) == 'Fri'){
+      setState(() {
+        day = 4;
+      });
+    } else if(DateFormat('EEE').format(DateTime.now()) == 'Sat'){
+      setState(() {
+        day = 5;
+      });
+    } else {
+      setState(() {
+        day = 6;
+      });
+    }
   }
 
   @override
   void dispose() {
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.white,
@@ -67,18 +94,37 @@ class _RoutinePageState extends State<RoutinePage> {
                             fontWeight: FontWeight.w600,
                           ),
                     ),
-                    SizedBox(height: 3,),
-                    Text(
-                        DateFormat.yMMMEd().format(DateTime.now()),
-                      style:
-                          FlutterFlowTheme.of(context).bodyMedium.override(
-                                fontFamily: 'Source Sans Pro',
-                                color: mainColor2,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
-                              ),
+                    SizedBox(
+                      height: 3,
                     ),
-                    SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateFormat.yMMMEd().format(DateTime.now()),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Source Sans Pro',
+                                    color: mainColor2,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        Text(
+                          DateFormat('kk:mm a').format(DateTime.now()),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Source Sans Pro',
+                                    color: mainColor2,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Container(
                       height: 60.0,
                       decoration: BoxDecoration(
@@ -101,7 +147,7 @@ class _RoutinePageState extends State<RoutinePage> {
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   10.0, 0.0, 0.0, 0.0),
                               child: Text(
-                                'Create Routine Schedule',
+                                'Create Weekly Routine',
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -121,7 +167,15 @@ class _RoutinePageState extends State<RoutinePage> {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
-                                context.pushNamed('createRoutine');
+                                isReload = await context
+                                    .pushNamed('createRoutine') as bool;
+                                setState(() {
+                                  if (isReload) {
+                                    getUserData(globals.email);
+                                  }
+                                });
+
+                                print(isReload);
                               },
                               child: Icon(
                                 Icons.add_circle,
@@ -136,293 +190,289 @@ class _RoutinePageState extends State<RoutinePage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20,),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 100.0,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF2F3F5),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            10.0, 0.0, 0.0, 0.0),
-                        child: Container(
-                          width: 55.0,
-                          height: 55.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.person_outline,
-                            color: Color(0xFF59BB18),
-                            size: 30.0,
-                          ),
+              SizedBox(
+                height: 20,
+              ),
+              isLoading
+                  ? Column(
+                      children: [
+                        SizedBox(
+                          height: 50,
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 5.0, 0.0, 0.0),
-                                child: Text(
-                                  'Personal',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                    fontFamily: 'Source Sans Pro',
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w700,
+                        Center(
+                            child: SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: CircularProgressIndicator(
+                                  color: mainColor1,
+                                ))),
+                      ],
+                    )
+                  : firebaseUser.todo != null &&
+                          firebaseUser.todo!.routine!.isNotEmpty
+                      ? Column(
+                          children: [
+                            for (var i in firebaseUser.todo!.routine!)
+                              GestureDetector(
+                                onTap: (){
+                                  print( i.day!.contains(
+                                      DateFormat('EEE')
+                                          .format(DateTime.now())));
+                                },
+
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    // height: 120.0,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFF2F3F5),
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        border: Border.all(
+                                            color: i.day!.contains(day)
+                                                ? mainColor1
+                                                : Color(0xFFF2F3F5))),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                              10.0, 0.0, 0.0, 0.0),
+                                          child: Container(
+                                            width: 55.0,
+                                            height: 55.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              i.category == 'Home'
+                                                  ? Icons.home_filled
+                                                  : i.category == 'Work'
+                                                      ? Icons.laptop
+                                                      : i.category == 'Study'
+                                                          ? Icons
+                                                              .menu_book_outlined
+                                                          : i.category ==
+                                                                  'Personal'
+                                                              ? Icons
+                                                                  .person_outline
+                                                              : i.category ==
+                                                                      'Movie'
+                                                                  ? Icons
+                                                                      .movie_filter_outlined
+                                                                  : i.category ==
+                                                                          'Travel'
+                                                                      ? Icons
+                                                                          .mode_of_travel_sharp
+                                                                      : Icons
+                                                                          .person_outline,
+                                              color: mainColor1,
+                                              size: 30.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 5.0, 0.0, 0.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        i.category.toString(),
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Source Sans Pro',
+                                                              fontSize: 18.0,
+                                                              fontWeight:
+                                                                  FontWeight.w700,
+                                                            ),
+                                                      ),
+                                                      Text(
+                                                        i.time.toString(),
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Source Sans Pro',
+                                                                  fontSize: 12.0,
+                                                                ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Text(
+                                                  i.rname.toString(),
+                                                  style:
+                                                      FlutterFlowTheme.of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                'Source Sans Pro',
+                                                            color: mainColor2,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                ),
+                                                Text(
+                                                  i.detail.toString(),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                          fontFamily:
+                                                              'Source Sans Pro',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: black
+                                                              .withOpacity(0.5)),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                Wrap(
+                                                  runSpacing: 5.0,
+                                                  spacing: 5.0,
+                                                  children: [
+                                                    for (var item in i.day!)
+                                                      Container(
+                                                        width: 40,
+                                                        decoration: BoxDecoration(
+                                                            color: mainColor1
+                                                                .withOpacity(0.5),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
+                                                        height: 15,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                          child: Center(
+                                                            child: Text(
+                                                              item == 0
+                                                                  ? "Mon"
+                                                                  : item == 1
+                                                                      ? "Tue"
+                                                                      : item == 2
+                                                                          ? "Wed"
+                                                                          : item ==
+                                                                                  3
+                                                                              ? "Thu"
+                                                                              : item == 4
+                                                                                  ? "Fri"
+                                                                                  : item == 5
+                                                                                      ? "Sat"
+                                                                                      : "Sun",
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                      fontFamily:
+                                                                          'Source Sans Pro',
+                                                                      fontSize:
+                                                                          10.0,
+                                                                      color:
+                                                                          black),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              elevation: 0,
+                                              backgroundColor: Colors.transparent,
+                                              shape: CircleBorder()),
+                                          onPressed: () {
+                                            print("more");
+                                          },
+                                          child: Icon(
+                                            Icons.more_vert_sharp,
+                                            color: mainColor2,
+                                            size: 28.0,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                              Text(
-                                'Task Details Details',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Source Sans Pro',
-                                  color: mainColor2,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                '9:00AM - 12:00AM',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                    fontFamily: 'Source Sans Pro',
-                                    fontWeight: FontWeight.w500,
-                                    color: black.withOpacity(0.5)
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            shape: CircleBorder()
-                        ),
-                        onPressed: (){
-                          print("more");
-                        }, child:
-                      Icon(
-                        Icons.more_vert_sharp,
-                        color: mainColor2,
-                        size: 28.0,
-                      ),)
+                          ],
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image(
+                                width: double.infinity,
+                                image:
+                                    AssetImage("assets/images/addRoutine.png")),
+                            TextButton(
+                              onPressed: () async {
+                                isReload = await context
+                                    .pushNamed('createRoutine') as bool;
+                                setState(() {
+                                  if (isReload) {
+                                    getUserData(globals.email);
+                                  }
+                                });
 
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 100.0,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF2F3F5),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            10.0, 0.0, 0.0, 0.0),
-                        child: Container(
-                          width: 55.0,
-                          height: 55.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.laptop,
-                            color: Color(0xFF59BB18),
-                            size: 30.0,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 5.0, 0.0, 0.0),
-                                child: Text(
-                                  'Work',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                    fontFamily: 'Source Sans Pro',
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w700,
+                                print(isReload);
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_circle_outline_outlined,
+                                    color: black.withOpacity(0.5),
+                                    size: 22,
                                   ),
-                                ),
-                              ),
-                              Text(
-                                'Task Details Details',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Source Sans Pro',
-                                  color: mainColor2,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                '9:00AM - 12:00AM',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                    fontFamily: 'Source Sans Pro',
-                                    fontWeight: FontWeight.w500,
-                                    color: black.withOpacity(0.5)
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            shape: CircleBorder()
-                        ),
-                        onPressed: (){
-                          print("more");
-                        }, child:
-                      Icon(
-                        Icons.more_vert_sharp,
-                        color: mainColor2,
-                        size: 28.0,
-                      ),)
-
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 100.0,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF2F3F5),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            10.0, 0.0, 0.0, 0.0),
-                        child: Container(
-                          width: 55.0,
-                          height: 55.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.menu_book_sharp,
-                            color: Color(0xFF59BB18),
-                            size: 30.0,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 5.0, 0.0, 0.0),
-                                child: Text(
-                                  'Study',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                    fontFamily: 'Source Sans Pro',
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w700,
+                                  SizedBox(
+                                    width: 5,
                                   ),
-                                ),
+                                  Text(
+                                    'Create new routine',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                            fontFamily: 'Source Sans Pro',
+                                            fontWeight: FontWeight.w500,
+                                            color: black.withOpacity(0.5),
+                                            fontSize: 16),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                'Task Details Details',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Source Sans Pro',
-                                  color: mainColor2,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                '9:00AM - 12:00AM',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                    fontFamily: 'Source Sans Pro',
-                                    fontWeight: FontWeight.w500,
-                                    color: black.withOpacity(0.5)
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            shape: CircleBorder()
-                        ),
-                        onPressed: (){
-                          print("more");
-                        }, child:
-                      Icon(
-                        Icons.more_vert_sharp,
-                        color: mainColor2,
-                        size: 28.0,
-                      ),)
-
-                    ],
-                  ),
-                ),
-              ),
-
+                            )
+                          ],
+                        )
             ],
           ),
         ),
@@ -434,7 +484,7 @@ class _RoutinePageState extends State<RoutinePage> {
     final snapshot = await users.where('email', isEqualTo: email).get();
     for (final doc in snapshot.docs) {
       final userData = doc.data()
-      as Map<String, dynamic>?; // Use a type cast with null check
+          as Map<String, dynamic>?; // Use a type cast with null check
       print(userData);
       if (userData != null) {
         setState(() {
@@ -453,5 +503,4 @@ class _RoutinePageState extends State<RoutinePage> {
       }
     }
   }
-
 }

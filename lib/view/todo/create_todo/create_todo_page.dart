@@ -2,6 +2,8 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:go_router/go_router.dart';
+import 'package:to_do_a_p_p/model/routine_model.dart';
+import 'package:to_do_a_p_p/model/sechdule_model.dart';
 import 'package:to_do_a_p_p/model/to_do_model.dart';
 import 'package:to_do_a_p_p/utils/constant/colors.dart';
 import '../../../flutter_flow/flutter_flow_widgets.dart';
@@ -25,6 +27,8 @@ class _CreateTodoPageState extends State<CreateTodoPage> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   FirebaseUser firebaseUser = FirebaseUser();
   List<TodoModel> todoList = [];
+  List<RoutineModel> routineModel = [];
+  List<SechduleModel> scheduleModel = [];
 
   final List<String> items = [
     'Personal',
@@ -300,6 +304,8 @@ class _CreateTodoPageState extends State<CreateTodoPage> {
           print(userData['email']);
           firebaseUser = FirebaseUser.fromJson(userData);
           todoList = firebaseUser.todo!.todolist ?? [];
+          routineModel = firebaseUser.todo!.routine ?? [];
+          scheduleModel = firebaseUser.todo!.sechdule ?? [];
         });
       } else {
         print("error");
@@ -314,7 +320,9 @@ class _CreateTodoPageState extends State<CreateTodoPage> {
    todoList = [...todoList, newtodo];
     await users.doc(globals.docID).update({
       'todo': {
-        'todolist': todoList.map((todo) => todo.toJson()).toList()
+        'todolist': todoList.map((todo) => todo.toJson()).toList(),
+        'routine': routineModel.map((routine) => routine.toJson()).toList(),
+        'schedule': scheduleModel.map((schedule) => schedule.toJson()).toList(),
       }
     }) // <-- Updated data
         .then((_) {
