@@ -37,7 +37,7 @@ Todo Studio Flutter project.
     									<img width="350px" src="https://github.com/ZapeeoSheikh/to_do_app/assets/77886136/cf175f86-d458-40c2-8410-e2516b9706b9">
     									</td>
                   <td>
-    										<img width="350px" src="https://github.com/ZapeeoSheikh/to_do_app/assets/77886136/8af7f8e6-0128-460c-8006-b7baa40723e8">
+    										<img width="350px" src="https://github.com/ZapeeoSheikh/to_do_app/assets/77886136/83dc873b-a6b9-4564-b996-9d3be22d5c14">
     										</td>
     								</tr>
   	</table>
@@ -60,4 +60,27 @@ Todo Studio Flutter project.
     										</td>
     								</tr>
   	</table>
-   
+
+<table>
+    						<tr>
+    							<th> Sorting Pane </th>
+    							<th> Add New Sechduler Page </th>
+                                <th> Create To-do Page </th>
+    						</tr>
+    						<tr>
+    							<td>
+    								<img width="350px"  src="https://github.com/ZapeeoSheikh/to_do_app/assets/77886136/8031cee2-5a7b-45a9-af62-215f5757ae97">
+    								</td>
+    								<td>
+    									<img width="350px" src="https://github.com/ZapeeoSheikh/to_do_app/assets/77886136/e10622e6-aa4e-4790-959a-4b43fa7c467d">
+    									</td>
+                  <td>
+    										<img width="350px" src="https://github.com/ZapeeoSheikh/to_do_app/assets/77886136/8e2aab63-42ad-4e24-9573-23ff9b533048">
+    										</td>
+    								</tr>
+  	</table>
+
+
+
+
+
